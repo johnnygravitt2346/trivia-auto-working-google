@@ -1,0 +1,153 @@
+/* High-priority overrides for Apple-like look */
+body {
+  background: var(--color-bg) !important; /* replaces gradient */
+  color: var(--color-text) !important;
+  font-family: var(--font-sans) !important;
+}
+
+.main-container {
+  max-width: 1280px !important;
+  padding: var(--space-6) var(--space-6) !important;
+}
+
+.control-card,
+.card,
+.assets-table,
+.jobs-table {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-1) !important;
+}
+
+.card-header {
+  border-bottom: 1px solid var(--color-divider) !important;
+  padding-bottom: var(--space-3) !important;
+}
+
+.header h1 {
+  color: var(--color-text) !important;
+  font-weight: 700 !important;
+}
+
+.header p {
+  color: var(--color-text-subtle) !important;
+}
+
+.btn,
+.btn-control,
+.btn-refresh,
+.btn-clear,
+.btn-generate,
+.btn-primary,
+.btn-success,
+.btn-outline-secondary {
+  border-radius: var(--radius-pill) !important;
+  height: 40px !important;
+  padding: 0 var(--space-4) !important;
+  box-shadow: none !important;
+  transition: background var(--dur-2) var(--ease),
+              box-shadow var(--dur-2) var(--ease) !important;
+}
+
+.btn-primary,
+.btn-generate {
+  background: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
+}
+.btn-primary:hover,
+.btn-generate:hover {
+  background: var(--color-accent-press) !important;
+  border-color: var(--color-accent-press) !important;
+}
+
+.form-control,
+.form-select {
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 8px 12px !important;
+  height: 40px !important;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-accent) !important;
+  box-shadow: 0 0 0 3px rgba(10,132,255,0.18) !important;
+}
+
+/* Tables */
+.table th {
+  background: var(--color-bg-elev-1) !important;
+  color: var(--color-text) !important;
+  border-bottom: 1px solid var(--color-divider) !important;
+}
+.table td {
+  border-bottom: 1px solid var(--color-divider) !important;
+}
+
+/* Jobs fading: de-emphasize older rows beyond top 5 */
+.jobs-table tbody tr.job-faded td {
+  opacity: 0.55;
+}
+
+/* Collapsible job details */
+.job-details-row td {
+  background: var(--color-bg-elev-1) !important;
+  border-top: 1px solid var(--color-divider) !important;
+}
+
+/* Drag & drop upload */
+#assetDropZone {
+  background: var(--color-bg-elev-1);
+  border: 2px dashed var(--color-border) !important;
+  cursor: pointer;
+}
+#assetDropZone.dragover {
+  border-color: var(--color-accent) !important;
+  background: var(--color-bg-elev-2);
+}
+
+/* Collapsible asset groups */
+.asset-group .asset-group-body { transition: all var(--dur-2) var(--ease); }
+
+/* Card collapse smoothness */
+#generateCardBody, #jobsCardBody { transition: all var(--dur-2) var(--ease); }
+
+/* Floating tooltip for XY/WH */
+.designer-tooltip {
+  position: absolute;
+  z-index: var(--z-tooltip);
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  pointer-events: none;
+  transform: translate(-50%, -150%);
+}
+
+/* Tabs */
+.nav-tabs .nav-link.active {
+  border-color: var(--color-border) var(--color-border) transparent !important;
+}
+
+/* Status badges */
+.status-pending { background: var(--color-warn) !important; color: #000 !important; }
+.status-processing { background: #17a2b8 !important; color: #fff !important; }
+.status-completed { background: var(--color-success) !important; color: #fff !important; }
+.status-failed { background: var(--color-error) !important; color: #fff !important; }
+
+/* Power-User mode visuals */
+body.power-user .card,
+body.power-user .control-card {
+  box-shadow: var(--shadow-2) !important;
+}
+body.power-user .table tr:hover td {
+  background: var(--color-bg-elev-2) !important;
+}
+body.power-user .btn {
+  box-shadow: var(--shadow-1) !important;
+}
+
+/* Utility */
+.divider { height: 1px; background: var(--color-divider); }
+

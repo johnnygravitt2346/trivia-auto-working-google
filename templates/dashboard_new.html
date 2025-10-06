@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Video Studio - Production Dashboard</title>
+    
+    <!-- Apple-inspired Design System -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/design_tokens.css" rel="stylesheet">
+    <link href="/static/css/components.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Apple-inspired Color Palette */
+            --apple-blue: #007AFF;
+            --apple-blue-dark: #0051D5;
+            --apple-gray: #F2F2F7;
+            --apple-gray-dark: #1C1C1E;
+            --apple-gray-light: #F9F9F9;
+            --apple-gray-medium: #8E8E93;
+            --apple-green: #34C759;
+            --apple-orange: #FF9500;
+            --apple-red: #FF3B30;
+            --apple-purple: #AF52DE;
+            
+            /* Typography */
+            --font-primary: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+            
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+            
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-primary);
+            background: var(--apple-gray);
+            color: #1D1D1F;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+        
+        /* Header */
+        .main-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: var(--space-md) var(--space-xl);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--apple-blue);
+        }
+        
+        .logo i {
+            font-size: 28px;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--apple-gray-light);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--apple-green);
+        }
+        
+        .status-dot.stopped {
+            background: var(--apple-red);
+        }
+        
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-xl);
+        }
+        
+        /* Quick Start Section */
+        .quick-start {
+            background: linear-gradient(135deg, var(--apple-blue) 0%, var(--apple-purple) 100%);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2xl);
+            margin-bottom: var(--space-xl);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quick-start::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .quick-start-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .quick-start h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            line-height: 1.1;
+        }
+        
+        .quick-start p {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: var(--space-xl);
+            max-width: 600px;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        .btn-primary-apple {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-primary-apple:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        /* Cards */
+        .card-apple {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .card-apple:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .card-header-apple {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1D1D1F;
+            margin: 0;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+        }
+        
+        .icon-blue { background: var(--apple-blue); }
+        .icon-green { background: var(--apple-green); }
+        .icon-orange { background: var(--apple-orange); }
+        .icon-purple { background: var(--apple-purple); }
+        .icon-red { background: var(--apple-red); }
+        
+        /* Thumbnail Upload Styles */
+        .upload-area {
+            border: 2px dashed var(--apple-gray-medium);
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--apple-gray-light);
+        }
+        
+        .upload-area:hover {
+            border-color: var(--apple-blue);
+            background: rgba(0, 122, 255, 0.05);
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--apple-blue);
+            background: rgba(0, 122, 255, 0.1);
+        }
+        
+        .upload-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: var(--apple-gray-medium);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .upload-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1D1D1F;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .upload-subtext {
+            font-size: 14px;
+            color: var(--apple-gray-medium);
+        }
+        
+        .thumbnail-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: var(--space-sm);
+        }
+        
+        .thumbnail-item {
+            position: relative;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: var(--apple-gray-light);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .thumbnail-preview {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .thumbnail-info {
+            padding: var(--space-xs);
+            text-align: center;
+        }
+        
+        .thumbnail-index {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--apple-blue);
+            margin-bottom: 2px;
+        }
+        
+        .thumbnail-name {
+            font-size: 10px;
+            color: var(--apple-gray-medium);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .thumbnail-remove {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(255, 59, 48, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: var(--space-md);
+            background: var(--apple-gray-light);
+            border-radius: var(--radius-md);
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--apple-blue);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--apple-gray-medium);
+            font-weight: 500;
+        }
+        
+        /* Buttons */
+        .btn-apple {
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+        
+        .btn-apple-primary {
+            background: var(--apple-blue);
+            color: white;
+        }
+        
+        .btn-apple-primary:hover {
+            background: var(--apple-blue-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-apple-secondary {
+            background: var(--apple-gray-light);
+            color: #1D1D1F;
+        }
+        
+        .btn-apple-secondary:hover {
+            background: #E5E5EA;
+        }
+        
+        .btn-apple-success {
+            background: var(--apple-green);
+            color: white;
+        }
+        
+        .btn-apple-success:hover {
+            background: #30B04A;
+        }
+        
+        /* Forms */
+        .form-group-apple {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .form-label-apple {
+            display: block;
+            font-weight: 600;
+            color: #1D1D1F;
+            margin-bottom: var(--space-sm);
+            font-size: 14px;
+        }
+        
+        .form-control-apple {
+            width: 100%;
+            padding: var(--space-md);
+            border: 2px solid #E5E5EA;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-family: var(--font-primary);
+            transition: all 0.2s ease;
+            background: white;
+        }
+        
+        .form-control-apple:focus {
+            outline: none;
+            border-color: var(--apple-blue);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+        
+        /* Progress Bars */
+        .progress-apple {
+            width: 100%;
+            height: 8px;
+            background: var(--apple-gray-light);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        
+        .progress-bar-apple {
+            height: 100%;
+            background: var(--apple-blue);
+            border-radius: var(--radius-sm);
+            transition: width 0.3s ease;
+        }
+        
+        /* Job List */
+        .job-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-md);
+            background: white;
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-sm);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .job-info {
+            flex: 1;
+        }
+        
+        .job-title {
+            font-weight: 600;
+            color: #1D1D1F;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .job-meta {
+            font-size: 14px;
+            color: var(--apple-gray-medium);
+        }
+        
+        .job-status {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-pending { background: #FFF3CD; color: #856404; }
+        .status-processing { background: #D1ECF1; color: #0C5460; }
+        .status-completed { background: #D4EDDA; color: #155724; }
+        .status-failed { background: #F8D7DA; color: #721C24; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: var(--space-md);
+            }
+            
+            .quick-start {
+                padding: var(--space-xl);
+            }
+            
+            .quick-start h1 {
+                font-size: 36px;
+            }
+            
+            .quick-start p {
+                font-size: 18px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+        }
+        
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: var(--apple-gray-dark);
+                color: #F2F2F7;
+            }
+            
+            .card-apple {
+                background: #2C2C2E;
+                border-color: #3A3A3C;
+            }
+            
+            .form-control-apple {
+                background: #2C2C2E;
+                border-color: #3A3A3C;
+                color: #F2F2F7;
+            }
+            
+            .main-header {
+                background: rgba(28, 28, 30, 0.8);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+        /* Environment Banner */
+        .env-banner {
+            background: var(--apple-orange);
+            color: white;
+            padding: var(--space-sm) var(--space-md);
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .env-banner.development {
+            background: var(--apple-orange);
+        }
+        
+        .env-banner.production {
+            background: var(--apple-green);
+        }
+        
+        .env-banner i {
+            margin-right: var(--space-xs);
+        }
+        
+        .badge {
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .badge-warning {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        /* Adjust main container - no banner in production UI */
+        .main-container {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Environment Banner intentionally hidden in production UI -->
+    <div class="env-banner production" id="env-banner" style="display: none;">
+        <i class="fas fa-shield-alt"></i>
+        Production Environment
+        <span id="placeholder-mode-badge" class="badge badge-warning ms-2" style="display: none;"></span>
+    </div>
+    
+    <!-- ARIA Live Region for Status Updates -->
+    <div id="aria-live" class="aria-live" aria-live="polite" aria-atomic="true"></div>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-video"></i>
+                <span>Trivia Video Studio</span>
+            </div>
+            <div class="header-actions">
+                <div class="status-indicator">
+                    <div class="status-dot" id="systemStatus"></div>
+                    <div class="status-text-group">
+                        <span id="systemStatusText">System Ready</span>
+                        <span data-pipeline-split class="split-badge disabled" aria-live="polite">Split Workers Disabled</span>
+                    </div>
+                </div>
+                <div class="queue-telemetry">
+                    <div class="telemetry-card">
+                        <span class="telemetry-label">Pending Queue</span>
+                        <span class="telemetry-value" data-queue-count="pending">0</span>
+                        <span class="telemetry-subtext">Oldest: <span data-queue-oldest="pending">—</span></span>
+                    </div>
+                    <div class="telemetry-card">
+                        <span class="telemetry-label">Google TTS Queue</span>
+                        <span class="telemetry-value" data-queue-count="pending_google_tts">0</span>
+                        <span class="telemetry-subtext">High Quality</span>
+                    </div>
+                    <div class="telemetry-card">
+                        <span class="telemetry-label">Custom TTS Queue</span>
+                        <span class="telemetry-value" data-queue-count="pending_custom_tts">0</span>
+                        <span class="telemetry-subtext">Fast Processing</span>
+                    </div>
+                    <div class="telemetry-card">
+                        <span class="telemetry-label">Ready for Render</span>
+                        <span class="telemetry-value" data-queue-count="ready_for_render">0</span>
+                        <span class="telemetry-subtext">Oldest: <span data-queue-oldest="ready_for_render">—</span></span>
+                    </div>
+                    <div class="telemetry-card">
+                        <span class="telemetry-label">TTS Engine</span>
+                        <span class="telemetry-value" data-tts-engine>custom</span>
+                    </div>
+                    <button class="btn-apple btn-apple-secondary" data-action="toggle-split" disabled>
+                        Toggle Split
+                    </button>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/legacy" class="btn-apple btn-apple-secondary">
+                        <i class="fas fa-history"></i>
+                        Legacy Dashboard
+                    </a>
+                    <a href="/studio" class="btn-apple btn-apple-secondary">
+                        <i class="fas fa-palette"></i>
+                        Template Studio
+                    </a>
+                    <a href="/templates/new/editor" class="btn-apple btn-apple-primary" style="margin-left: 10px;">
+                        <i class="fas fa-edit"></i>
+                        Template Editor MVP
+                    </a>
+                    <a href="/channels" class="btn-apple btn-apple-secondary">
+                        <i class="fas fa-tv"></i>
+                        Channel Manager
+                    </a>
+                </div>
+                <button class="btn-apple btn-apple-secondary" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main id="main-content" class="main-container">
+        <!-- Quick Start Section -->
+        <section class="quick-start">
+            <div class="quick-start-content">
+                <h1>Create Unlimited Trivia Videos</h1>
+                <p>Set up channels, configure templates, and generate thousands of professional trivia videos with AI-powered content and semantic clustering.</p>
+                <div class="quick-actions">
+                    <a href="#mass-generation" class="btn-primary-apple">
+                        <i class="fas fa-rocket"></i>
+                        Start Mass Generation
+                    </a>
+                    <a href="#template-studio" class="btn-primary-apple">
+                        <i class="fas fa-palette"></i>
+                        Design Templates
+                    </a>
+                    <a href="#channel-setup" class="btn-primary-apple">
+                        <i class="fas fa-tv"></i>
+                        Setup Channel
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- System Overview -->
+            <div class="card-apple">
+                <div class="card-header-apple">
+                    <h3 class="card-title">System Overview</h3>
+                    <div class="card-icon icon-blue">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalJobs">0</div>
+                        <div class="stat-label">Total Jobs</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="completedJobs">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="activeJobs">0</div>
+                        <div class="stat-label">Active</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="successRate">0%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button class="btn-apple btn-apple-primary" onclick="startPipeline()">
+                        <i class="fas fa-play"></i>
+                        Start Pipeline
+                    </button>
+                    <button class="btn-apple btn-apple-secondary" onclick="stopPipeline()">
+                        <i class="fas fa-stop"></i>
+                        Stop Pipeline
+                    </button>
+                </div>
+            </div>
+
+            <!-- Channel Management -->
+            <div class="card-apple">
+                <div class="card-header-apple">
+                    <h3 class="card-title">Channel Management</h3>
+                    <div class="card-icon icon-green">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                </div>
+                <div class="form-group-apple">
+                    <label class="form-label-apple">Current Channel</label>
+                    <select class="form-control-apple" id="channelSelector">
+                        <option value="">Select a channel...</option>
+                    </select>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn-apple btn-apple-primary" onclick="createChannel()">
+                        <i class="fas fa-plus"></i>
+                        New Channel
+                    </button>
+                    <button class="btn-apple btn-apple-secondary" onclick="manageAssets()">
+                        <i class="fas fa-folder"></i>
+                        Assets
+                    </button>
+                </div>
+                <div id="channelInfo" class="mt-3" style="display: none;">
+                    <div class="alert alert-info">
+                        <strong>Channel:</strong> <span id="currentChannelName"></span><br>
+                        <strong>Assets:</strong> <span id="currentChannelAssets"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Template Studio -->
+            <div class="card-apple">
+                <div class="card-header-apple">
+                    <h3 class="card-title">Template Studio</h3>
+                    <div class="card-icon icon-purple">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                </div>
+                <div class="form-group-apple">
+                    <label class="form-label-apple">Current Template</label>
+                    <select class="form-control-apple" id="templateSelector">
+                        <option value="">Select a template...</option>
+                    </select>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn-apple btn-apple-primary" onclick="openTemplateStudio()">
+                        <i class="fas fa-edit"></i>
+                        Design Template
+                    </button>
+                    <button class="btn-apple btn-apple-secondary" onclick="createTemplate()">
+                        <i class="fas fa-plus"></i>
+                        New Template
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mass Generation -->
+            <div class="card-apple">
+                <div class="card-header-apple">
+                    <h3 class="card-title">Mass Generation</h3>
+                    <div class="card-icon icon-orange">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                </div>
+                <div class="form-group-apple">
+                    <label class="form-label-apple">Content Source</label>
+                    <div class="d-flex gap-2">
+                        <label class="form-check">
+                            <input type="radio" name="contentSource" value="gemini" checked>
+                            <span class="ms-2">Gemini AI</span>
+                        </label>
+                        <label class="form-check">
+                            <input type="radio" name="contentSource" value="csv">
+                            <span class="ms-2">CSV Upload</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- CSV Upload Section -->
+                <div id="csvUploadSection" class="form-group-apple" style="display: none;">
+                    <label class="form-label-apple">Upload CSV File(s)</label>
+                    
+                    <!-- Single CSV Upload (One Video) -->
+                    <div class="mb-3">
+                        <label class="form-label-apple" style="font-size: 14px; margin-bottom: 8px;">Single CSV Upload (One Video)</label>
+                        <input type="file" class="form-control-apple" id="csvFileInput" accept=".csv" onchange="handleCSVUpload(event)" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <div class="form-text">Upload ONE CSV file → Creates ONE video with all questions. Required: question, answer_a, answer_b, answer_c, answer_d, correct_answer</div>
+                    </div>
+                    
+                    <!-- Bulk CSV Upload (Multiple Videos) -->
+                    <div class="mb-3">
+                        <label class="form-label-apple" style="font-size: 14px; margin-bottom: 8px;">Bulk CSV Upload (Multiple Videos)</label>
+                        <input type="file" class="form-control-apple" id="bulkCsvFileInput" accept=".csv" multiple onchange="handleBulkCSVUpload(event)" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <div class="form-text">Upload MULTIPLE CSV files → Creates MULTIPLE videos (one per CSV). Each CSV becomes a separate quiz video. <strong>Note:</strong> For YouTube uploads with custom titles/descriptions, use "CSV + Manifest Upload" below.</div>
+                        <div id="bulkCsvPreview" class="mt-2" style="display: none;">
+                            <div class="alert alert-info" style="padding: 8px 12px; background: #E3F2FD; border: 1px solid #2196F3; border-radius: 4px; font-size: 12px;">
+                                <strong>Selected Files:</strong> <span id="bulkCsvCount">0</span> CSV files ready for upload
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Upload Mode Toggle -->
+                    <div class="form-group-apple">
+                        <label class="form-label-apple">Upload Mode</label>
+                        <div class="d-flex gap-3">
+                            <label class="form-check">
+                                <input type="radio" name="uploadMode" value="single" checked onchange="toggleUploadModeYouTube()">
+                                <span class="ms-2">Single CSV (1 Video)</span>
+                            </label>
+                            <label class="form-check">
+                                <input type="radio" name="uploadMode" value="bulk" onchange="toggleUploadModeYouTube()">
+                                <span class="ms-2">Bulk CSV (No YouTube)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- CSV + Manifest Upload -->
+                    <div class="mb-3">
+                        <label class="form-label-apple" style="font-size: 14px; margin-bottom: 8px;">CSV + Manifest Upload (Advanced)</label>
+                        <div class="alert alert-info" style="padding: 8px 12px; background: #E8F5E8; border: 1px solid #4CAF50; border-radius: 4px; font-size: 12px;">
+                            <strong>New Feature:</strong> Upload multiple CSVs with a manifest file for bulk processing with automatic YouTube descriptions and output manifests.
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label-apple" style="font-size: 12px;">Step 1: Upload CSV Files</label>
+                                <input type="file" class="form-control-apple" id="manifestCsvFiles" accept=".csv" multiple style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                <div class="form-text" style="font-size: 11px;">Upload multiple CSV files (each will become a separate video)</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-apple" style="font-size: 12px;">Step 2: Upload Manifest JSON</label>
+                                <input type="file" class="form-control-apple" id="manifestFile" accept=".json" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                <div class="form-text" style="font-size: 11px;">Upload manifest.json that references your CSV filenames</div>
+                            </div>
+                        </div>
+                        
+                        <div id="manifestUploadStatus" class="mt-2" style="display: none;">
+                            <div class="alert alert-success" style="padding: 8px 12px; background: #E8F5E8; border: 1px solid #4CAF50; border-radius: 4px; font-size: 12px;">
+                                <strong>Upload Status:</strong> <span id="manifestStatusText">Ready</span>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-2 mt-2">
+                            <button id="uploadCsvsBtn" class="btn btn-secondary btn-sm" disabled>
+                                <i class="fas fa-upload"></i> Upload CSVs
+                            </button>
+                            <button id="uploadManifestBtn" class="btn btn-secondary btn-sm" disabled>
+                                <i class="fas fa-upload"></i> Upload Manifest
+                            </button>
+                            <button id="startManifestProcessingBtn" class="btn btn-primary btn-sm" disabled>
+                                <i class="fas fa-play"></i> Start Processing
+                            </button>
+                        </div>
+                        
+                        <!-- YouTube Upload Option for Manifest -->
+                        <div class="mt-3">
+                            <label class="form-label-apple" style="font-size: 12px;">YouTube Upload (CSV + Manifest)</label>
+                            <div class="d-flex align-items-center gap-3">
+                                <label class="form-check">
+                                    <input type="checkbox" name="youtubeUploadManifest" id="youtubeUploadManifest" onchange="toggleManifestThumbnailUpload()">
+                                    <span class="ms-2">Upload to YouTube (Private)</span>
+                                </label>
+                                <div class="form-text" style="margin: 0; font-size: 11px; color: #666;">
+                                    Videos will be uploaded to YouTube with manifest titles and descriptions
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Batch Thumbnail Upload for Manifest (YouTube Upload Only) -->
+                        <div class="form-group-apple" id="manifestThumbnailUploadOption" style="display: none;">
+                            <label class="form-label-apple">Batch Thumbnail Upload</label>
+                            <div class="form-text mb-2" style="font-size: 12px; color: #666;">
+                                <i class="fas fa-images"></i> Upload thumbnails in the same order as your CSV files for YouTube videos
+                            </div>
+                            <div class="upload-area" id="manifestThumbnailUploadArea">
+                                <div class="upload-content">
+                                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                    <div class="upload-text">
+                                        <strong>Click to upload thumbnails</strong> or drag and drop
+                                    </div>
+                                    <div class="upload-subtext">
+                                        Upload JPG, PNG files in CSV order (supports multiple files)
+                                    </div>
+                                </div>
+                                <input type="file" id="manifestThumbnailFiles" name="manifestThumbnails" multiple accept=".jpg,.jpeg,.png,.webp" style="display: none;">
+                            </div>
+                            <div id="manifestThumbnailPreview" class="mt-3" style="display: none;">
+                                <div class="form-text mb-2">
+                                    <i class="fas fa-list-ol"></i> <strong>Uploaded Thumbnails (in order):</strong>
+                                </div>
+                                <div id="manifestThumbnailList" class="thumbnail-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group-apple">
+                    <label class="form-label-apple">Batch Size</label>
+                    <select class="form-control-apple" id="batchSize">
+                        <option value="20">20 Videos</option>
+                        <option value="50">50 Videos</option>
+                        <option value="100">100 Videos</option>
+                        <option value="500">500 Videos</option>
+                    </select>
+                </div>
+                
+        <!-- Music Toggle -->
+        <div class="form-group-apple">
+            <label class="form-label-apple">Audio Settings</label>
+            <div class="d-flex align-items-center gap-3">
+                <label class="form-check">
+                    <input type="checkbox" id="musicToggle" checked>
+                    <span class="ms-2">Include Background Music</span>
+                </label>
+                <div class="form-text" style="margin: 0; font-size: 12px; color: #666;">
+                    <i class="fas fa-music"></i> Random music selection from uploaded audio files
+                </div>
+            </div>
+        </div>
+
+        <!-- TTS Engine Selection -->
+        <div class="form-group-apple">
+            <label class="form-label-apple">TTS Engine</label>
+            <div class="d-flex gap-3">
+                <label class="form-check">
+                    <input type="radio" name="ttsEngine" value="custom" checked>
+                    <span class="ms-2">Local TTS (Port 6003)</span>
+                </label>
+                <label class="form-check">
+                    <input type="radio" name="ttsEngine" value="google">
+                    <span class="ms-2">Google TTS</span>
+                </label>
+            </div>
+            <div class="form-text" style="margin: 0; font-size: 12px; color: #666;">
+                <i class="fas fa-clock"></i> Local TTS: Your custom server on port 6003 | Google TTS: Cloud-based high quality
+            </div>
+        </div>
+
+        <!-- Voice Selection (Local TTS only) -->
+        <div class="form-group-apple" id="voiceSelectionGroup" style="display: none;">
+            <label class="form-label-apple">Voice Selection</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <select class="form-select" id="voiceSelector">
+                        <option value="ana_florence">Ana Florence - Perfect young American female voice</option>
+                        <option value="emma">Emma - Young American female voice</option>
+                        <option value="sarah">Sarah - Friendly American female voice</option>
+                        <option value="amy">Amy - Clear American female voice</option>
+                        <option value="lisa">Lisa - Professional American female voice</option>
+                        <option value="young_female">Young Female - Young American female voice</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-outline-primary" id="previewVoiceBtn" onclick="previewVoice()">
+                        <i class="fas fa-play"></i> Preview Voice
+                    </button>
+                    <audio id="voicePreview" controls style="display: none; margin-left: 10px;">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+            </div>
+            <div class="form-text" style="margin: 0; font-size: 12px; color: #666;">
+                <i class="fas fa-volume-up"></i> Select a voice and click preview to hear how it sounds
+            </div>
+        </div>
+
+        <!-- Test/Production Toggle -->
+        <div class="form-group-apple">
+            <label class="form-label-apple">Output Destination</label>
+            <div class="d-flex align-items-center gap-3">
+                <label class="form-check">
+                    <input type="radio" name="outputMode" value="test" checked onchange="toggleYouTubeUploadOption()">
+                    <span class="ms-2">Test Mode</span>
+                </label>
+                <label class="form-check">
+                    <input type="radio" name="outputMode" value="production" onchange="toggleYouTubeUploadOption()">
+                    <span class="ms-2">Production Mode</span>
+                </label>
+                <div class="form-text" style="margin: 0; font-size: 12px; color: #666;">
+                    <i class="fas fa-route"></i> Test: test bucket/collections | Production: prod bucket/collections
+                </div>
+            </div>
+        </div>
+
+        <!-- YouTube Upload Toggle (Single CSV Mode Only) -->
+        <div class="form-group-apple" id="youtubeUploadOption" style="display: none;">
+            <label class="form-label-apple">YouTube Upload (Single CSV Only)</label>
+            <div class="d-flex align-items-center gap-3">
+                <label class="form-check">
+                    <input type="checkbox" name="youtubeUploadTest" id="youtubeUploadTest">
+                    <span class="ms-2">Upload to YouTube (Private)</span>
+                </label>
+                <div class="form-text" style="margin: 0; font-size: 12px; color: #666;">
+                    <i class="fas fa-youtube"></i> Upload videos to @SportsBrainTrivia as private for review
+                </div>
+            </div>
+        </div>
+
+                <button class="btn-apple btn-apple-success w-100" onclick="startMassGeneration()">
+                    <i class="fas fa-rocket"></i>
+                    Generate Videos
+                </button>
+                <button class="btn-apple btn-apple-secondary w-100 mt-2" onclick="testCSVSection()">
+                    <i class="fas fa-bug"></i>
+                    Test CSV Section
+                </button>
+            </div>
+        </div>
+
+        <!-- Asset Categories -->
+        <div class="card-apple">
+            <div class="card-header-apple">
+                <h3 class="card-title">Asset Management</h3>
+                <div class="card-icon icon-purple">
+                    <i class="fas fa-folder"></i>
+                </div>
+            </div>
+            
+            <!-- Asset Category Tabs -->
+            <div class="nav nav-tabs mb-3" id="assetTabs" role="tablist">
+                <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab">All Assets</button>
+                <button class="nav-link" id="backgrounds-tab" data-bs-toggle="tab" data-bs-target="#backgrounds" type="button" role="tab">Background Videos</button>
+                <button class="nav-link" id="audio-tab" data-bs-toggle="tab" data-bs-target="#audio" type="button" role="tab">Audio Files</button>
+                <button class="nav-link" id="overlays-tab" data-bs-toggle="tab" data-bs-target="#overlays" type="button" role="tab">Overlay Images</button>
+                <button class="nav-link" id="intros-tab" data-bs-toggle="tab" data-bs-target="#intros" type="button" role="tab">Intro Videos</button>
+                <button class="nav-link" id="outros-tab" data-bs-toggle="tab" data-bs-target="#outros" type="button" role="tab">Outro Videos</button>
+                <button class="nav-link" id="transitions-tab" data-bs-toggle="tab" data-bs-target="#transitions" type="button" role="tab">Transition Videos</button>
+                <button class="nav-link" id="test-assets-tab" data-bs-toggle="tab" data-bs-target="#test-assets" type="button" role="tab">Test Assets</button>
+            </div>
+
+            <!-- Asset Tables -->
+            <div class="tab-content" id="assetTabContent">
+                <div class="tab-pane fade show active" id="all" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Size</th>
+                                    <th>Uploaded</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allAssetsTableBody">
+                                <!-- Assets will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="backgrounds" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Size</th>
+                                    <th>Uploaded</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="backgroundsTableBody">
+                                <!-- Background assets will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="audio" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Size</th>
+                                    <th>Uploaded</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="audioTableBody">
+                                <!-- Audio assets will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="overlays" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Size</th>
+                                    <th>Uploaded</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="overlaysTableBody">
+                                <!-- Overlay assets will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="intros" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Size</th>
+                                    <th>Uploaded</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="introsTableBody">
+                                <!-- Intro assets will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="outros" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Size</th>
+                                    <th>Uploaded</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="outrosTableBody">
+                                <!-- Outro assets will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="transitions" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Size</th>
+                                    <th>Uploaded</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transitionsTableBody">
+                                <!-- Transition assets will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="test-assets" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Uploaded</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="testAssetsTableBody">
+                                <!-- Test assets will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Production Monitor -->
+        <div class="card-apple">
+            <div class="card-header-apple">
+                <h3 class="card-title">Production Monitor</h3>
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn-apple btn-apple-secondary btn-sm" onclick="refreshJobs()" title="Refresh Jobs">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="btn-apple btn-apple-warning btn-sm" onclick="toggleJobUpdates()" id="autoUpdateBtn" title="Toggle Auto-Update">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <div class="card-icon icon-red">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                </div>
+            </div>
+            <div id="jobsContainer">
+                <div class="text-center text-muted py-4">
+                    <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                    <p>Loading production jobs...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="/static/js/dashboard_new.js"></script>
+    <script src="/static/js/assets.js"></script>
+</body>
+</html>

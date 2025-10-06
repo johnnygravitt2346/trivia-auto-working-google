@@ -1,0 +1,15 @@
+{
+  "tts": {
+    "endpoint": "http://localhost:6003/tts",
+    "default_voice": "ana_florence",
+    "speed": 1.0
+  },
+  "automations": {
+    "tts_generation": {
+      "voice": "ana_florence",
+      "speed": 1.0
+    }
+  }
+}
+
+
